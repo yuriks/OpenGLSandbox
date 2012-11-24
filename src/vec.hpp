@@ -108,7 +108,7 @@ static const vec3 vec3_0 = {0.0f, 0.0f, 0.0f};
 
 // Computes dot-product of vectors a and b.
 template<unsigned int N>
-float dot(const vec<N> a, const vec<N> b) {
+inline float dot(const vec<N> a, const vec<N> b) {
 	float r = 0.0f;
 	for (unsigned int i = 0; i < N; ++i) {
 		r += a[i] * b[i];
@@ -117,20 +117,20 @@ float dot(const vec<N> a, const vec<N> b) {
 }
 
 // Computes cross-product of vectors a and b.
-vec3 cross(const vec3 a, const vec3 b) {
+inline vec3 cross(const vec3 a, const vec3 b) {
 	vec3 r = {a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0]};
 	return r;
 }
 
 // Computes euclidean length of vector v.
 template<unsigned int N>
-float length(const vec<N> v) {
+inline float length(const vec<N> v) {
 	return std::sqrt(dot(v, v));
 }
 
 // Normalizes vector v.
 template<unsigned int N>
-vec<N> normalized(const vec<N> v) {
+inline vec<N> normalized(const vec<N> v) {
 	return v * (1.0f / length(v));
 }
 
