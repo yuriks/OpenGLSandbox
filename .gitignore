@@ -1,0 +1,7 @@
+/Debug/
+/Release/
+/UnitTests/
+/*.vcxproj.user
+/*.suo
+/*.sdf
+/*.opensdf
