@@ -1,4 +1,6 @@
 #include <boost/test/unit_test.hpp>
+#include <sstream>
+#include <string>
 
 #include "mat.hpp"
 
@@ -86,4 +88,13 @@ BOOST_AUTO_TEST_CASE(MatrixFuncsTest) {
 	}};
 
 	BOOST_CHECK_EQUAL(transpose(a), a_transposed);
+
+	// Test printing
+	std::ostringstream ss;
+	ss << a;
+
+	const std::string a_string =
+		"|1 2|\n"
+		"|3 4|\n";
+	BOOST_CHECK_EQUAL(ss.str(), a_string);
 }

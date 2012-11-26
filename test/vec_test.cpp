@@ -1,4 +1,6 @@
 #include <boost/test/unit_test.hpp>
+#include <sstream>
+#include <string>
 
 #include "vec.hpp"
 
@@ -66,4 +68,9 @@ BOOST_AUTO_TEST_CASE(VectorFuncsTest) {
 	// Test normalized
 	BOOST_CHECK_EQUAL(normalized(vec3_x), vec3_x);
 	//BOOST_CHECK_EQUAL(normalized(mvec(2.0f, 4.0f), );
+
+	// Test printing
+	std::ostringstream ss;
+	ss << a;
+	BOOST_CHECK_EQUAL(ss.str(), "<2 3 4>");
 }
