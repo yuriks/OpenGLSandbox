@@ -78,4 +78,12 @@ BOOST_AUTO_TEST_CASE(MatrixFuncsTest) {
 	// Test matrix multiplication
 	BOOST_CHECK_EQUAL(a * mat2_identity, a);
 	BOOST_CHECK_EQUAL(a * a, a_times_a);
+
+	// Test transpose()
+	const mat2 a_transposed = {{
+		{1.0f, 3.0f},
+		{2.0f, 4.0f}
+	}};
+
+	BOOST_CHECK_EQUAL(transpose(a), a_transposed);
 }

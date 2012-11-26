@@ -119,6 +119,19 @@ mat<M,P> operator *(const mat<M,N>& a, const mat<N,P>& b) {
 	return r;
 }
 
+template<unsigned int R, unsigned int C>
+mat<R,C> transpose(const mat<R,C>& m) {
+	mat<R,C> t;
+
+	for (unsigned int i = 0; i < R; ++i) {
+		for (unsigned int j = 0; j < C; ++j) {
+			t(j, i) = m(i, j);
+		}
+	}
+
+	return t;
+}
+
 // Prints matrix m to stream.
 template<unsigned int R, unsigned int C>
 std::ostream& operator <<(std::ostream& s, const mat<R,C>& m) {
