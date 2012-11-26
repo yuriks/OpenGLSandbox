@@ -139,7 +139,7 @@ template<unsigned int N>
 std::ostream& operator <<(std::ostream& s, const vec<N> v) {
 	s << '<';
 	for (unsigned int i = 0; i < N-1; ++i) {
-		s << v[i] << " ";
+		s << v[i] << ' ';
 	}
 	return s << v[N-1] << '>';
 }
