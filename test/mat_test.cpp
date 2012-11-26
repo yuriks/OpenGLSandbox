@@ -95,6 +95,6 @@ BOOST_AUTO_TEST_CASE(MatrixFuncsTest) {
 
 	const std::string a_string =
 		"|1 2|\n"
-		"|3 4|\n";
+		"|3 4|";
 	BOOST_CHECK_EQUAL(ss.str(), a_string);
 }

@@ -138,9 +138,11 @@ std::ostream& operator <<(std::ostream& s, const mat<R,C>& m) {
 	for (unsigned int i = 0; i < R; ++i) {
 		s << '|';
 		for (unsigned int j = 0; j < C-1; ++j) {
-			s << m(i, j) << " ";
+			s << m(i, j) << ' ';
 		}
-		s << m(i, C-1) << "|\n";
+		s << m(i, C-1) << '|';
+		if (i < R-1)
+			s << '\n';
 	}
 
 	return s;
