@@ -110,11 +110,11 @@ inline vec<4,T> mvec(T x, T y, T z, T w) {
 }
 
 // Convenient constants for vectors
-static const vec3 vec3_x = {1.0f, 0.0f, 0.0f};
-static const vec3 vec3_y = {0.0f, 1.0f, 0.0f};
-static const vec3 vec3_z = {0.0f, 0.0f, 1.0f};
-static const vec3 vec3_1 = {1.0f, 1.0f, 1.0f};
-static const vec3 vec3_0 = {0.0f, 0.0f, 0.0f};
+static const vec3 vec3_x = {1, 0, 0};
+static const vec3 vec3_y = {0, 1, 0};
+static const vec3 vec3_z = {0, 0, 1};
+static const vec3 vec3_1 = {1, 1, 1};
+static const vec3 vec3_0 = {0, 0, 0};
 
 // Computes dot-product of vectors a and b.
 template<unsigned int N, typename T>

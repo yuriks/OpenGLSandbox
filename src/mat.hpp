@@ -94,19 +94,19 @@ typedef mat<4> mat4;
 
 // Convenient constants for matrices.
 static const mat2 mat2_identity = {{
-	{1.0f, 0.0f},
-	{0.0f, 1.0f}
+	{1, 0},
+	{0, 1}
 }};
 static const mat3 mat3_identity = {{
-	{1.0f, 0.0f, 0.0f},
-	{0.0f, 1.0f, 0.0f},
-	{0.0f, 0.0f, 1.0f}
+	{1, 0, 0},
+	{0, 1, 0},
+	{0, 0, 1}
 }};
 static const mat4 mat4_identity = {{
-	{1.0f, 0.0f, 0.0f, 0.0f},
-	{0.0f, 1.0f, 0.0f, 0.0f},
-	{0.0f, 0.0f, 1.0f, 0.0f},
-	{0.0f, 0.0f, 0.0f, 1.0f}
+	{1, 0, 0, 0},
+	{0, 1, 0, 0},
+	{0, 0, 1, 0},
+	{0, 0, 0, 1}
 }};
 
 template<unsigned int M, unsigned int N, unsigned int P, typename T>
