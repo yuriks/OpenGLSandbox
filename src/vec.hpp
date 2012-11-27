@@ -12,12 +12,10 @@ struct vec {
 	float data[N == 3 ? 4 : N];
 
 	inline float& operator [](unsigned int i) {
-		assert(i < N);
 		return data[i];
 	}
 
 	inline const float& operator [](unsigned int i) const {
-		assert(i < N);
 		return data[i];
 	}
 

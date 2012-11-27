@@ -14,12 +14,10 @@ struct mat {
 
 	// Basic element acessors
 	inline float& operator ()(unsigned int i, unsigned int j) {
-		assert(i < R && j < C);
 		return data[i][j];
 	}
 
 	inline const float& operator ()(unsigned int i, unsigned int j) const {
-		assert(i < R && j < C);
 		return data[i][j];
 	}
 
