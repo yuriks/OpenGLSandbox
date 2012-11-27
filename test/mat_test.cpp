@@ -82,12 +82,17 @@ BOOST_AUTO_TEST_CASE(MatrixFuncsTest) {
 	BOOST_CHECK_EQUAL(a * a, a_times_a);
 
 	// Test transpose()
-	const mat2 a_transposed = {{
-		{1.0f, 3.0f},
-		{2.0f, 4.0f}
+	const mat<2,3> b = {{
+		{1, 2, 3},
+		{4, 5, 6}
+	}};
+	const mat<3,2> b_transposed = {{
+		{1, 4},
+		{2, 5},
+		{3, 6}
 	}};
 
-	BOOST_CHECK_EQUAL(transpose(a), a_transposed);
+	BOOST_CHECK_EQUAL(b_transposed, transpose(b));
 
 	// Test printing
 	std::ostringstream ss;

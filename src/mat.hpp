@@ -120,8 +120,8 @@ mat<M,P> operator *(const mat<M,N>& a, const mat<N,P>& b) {
 }
 
 template<unsigned int R, unsigned int C>
-mat<R,C> transpose(const mat<R,C>& m) {
-	mat<R,C> t;
+mat<C,R> transpose(const mat<R,C>& m) {
+	mat<C,R> t;
 
 	for (unsigned int i = 0; i < R; ++i) {
 		for (unsigned int j = 0; j < C; ++j) {
