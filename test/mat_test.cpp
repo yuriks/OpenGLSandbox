@@ -81,6 +81,21 @@ BOOST_AUTO_TEST_CASE(MatrixFuncsTest) {
 	BOOST_CHECK_EQUAL(a * mat2_identity, a);
 	BOOST_CHECK_EQUAL(a * a, a_times_a);
 
+	const mat<3, 1> column_matrix = {{
+		{1.0f},
+		{2.0f},
+		{3.0f}
+	}};
+
+	const mat<1, 3> row_matrix = {{
+		{1.0f, 2.0f, 3.0f}
+	}};
+
+	const vec3 vector = {{1.0f, 2.0f, 3.0f}};
+
+	BOOST_CHECK_EQUAL(vector, vec_from_mat(column_matrix));
+	BOOST_CHECK_EQUAL(vector, vec_from_mat(row_matrix));
+
 	// Test transpose()
 	const mat<2,3> b = {{
 		{1, 2, 3},

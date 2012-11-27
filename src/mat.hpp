@@ -126,6 +126,24 @@ mat<M,P,T> operator *(const mat<M,N,T>& a, const mat<N,P,T>& b) {
 	return r;
 }
 
+// Column vector version
+template<unsigned int N, typename T>
+inline vec<N,T> vec_from_mat(const mat<N,1,T>& m) {
+	vec<N> v;
+	
+	for (unsigned int i = 0; i < N; ++i) {
+		v[i] = m(i, 0);
+	}
+
+	return v;
+}
+
+// Row vector version
+template<unsigned int N, typename T>
+inline vec<N,T> vec_from_mat(const mat<1,N,T>& m) {
+	return m.data[0];
+}
+
 template<unsigned int R, unsigned int C, typename T>
 mat<C,R,T> transpose(const mat<R,C,T>& m) {
 	mat<C,R,T> t;
