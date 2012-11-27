@@ -7,19 +7,19 @@
 namespace hw {
 namespace math {
 
-template<unsigned int N>
+template<unsigned int N, typename T = float>
 struct vec {
-	float data[N == 3 ? 4 : N];
+	T data[N == 3 ? 4 : N];
 
-	inline float& operator [](unsigned int i) {
+	inline T& operator [](unsigned int i) {
 		return data[i];
 	}
 
-	inline const float& operator [](unsigned int i) const {
+	inline const T& operator [](unsigned int i) const {
 		return data[i];
 	}
 
-	inline bool operator ==(const vec<N> o) const {
+	inline bool operator ==(const vec o) const {
 		bool eq = true;
 		for (unsigned int i = 0; i < N; ++i) {
 			eq = eq && data[i] == o[i];
@@ -27,19 +27,19 @@ struct vec {
 		return eq;
 	}
 
-	inline bool operator !=(const vec<N> o) const {
+	inline bool operator !=(const vec o) const {
 		return !(*this == o);
 	}
 
 #define DEFINE_OP(op) \
-	inline vec<N>& operator op##=(const vec<N> o) { \
+	inline vec& operator op##=(const vec o) { \
 		for (unsigned int i = 0; i < N; ++i) { \
 			data[i] op##= o[i]; \
 		} \
 		return *this; \
 	} \
-	inline vec<N> operator op(const vec<N> o) const { \
-		vec<N> r = *this; \
+	inline vec operator op(const vec o) const { \
+		vec r = *this; \
 		return r op##= o; \
 	}
 
@@ -50,29 +50,38 @@ struct vec {
 
 #undef DEFINE_OP
 
-	inline vec<N>& operator *=(const float a) {
+	inline vec& operator *=(const T a) {
 		for (unsigned int i = 0; i < N; ++i) {
 			data[i] *= a;
 		}
 		return *this;
 	}
 
-	inline vec<N> operator *(const float a) const {
-		vec<N> r = *this;
+	inline vec operator *(const T a) const {
+		vec r = *this;
 		return r *= a;
 	}
 
-	inline vec<N> operator -() const {
-		vec<N> r = *this;
+	inline vec operator -() const {
+		vec r = *this;
 		for (unsigned int i = 0; i < N; ++i) {
 			r[i] = -r[i];
 		}
 		return r;
 	}
+
+	template<typename T2>
+	inline vec<N,T2> typecast() const {
+		vec<N, T2> r;
+		for (unsigned int i = 0; i < N; ++i) {
+			r[i] = T2((*this)[i]);
+		}
+		return r;
+	}
 };
 
-template<unsigned int N>
-inline vec<N> operator *(const float a, const vec<N> v) {
+template<unsigned int N, typename T>
+inline vec<N,T> operator *(const T a, const vec<N,T> v) {
 	return v * a;
 }
 
@@ -82,18 +91,21 @@ typedef vec<3> vec3;
 typedef vec<4> vec4;
 
 // Convenience functions for constructing vectors inline.
-inline vec2 mvec(float x, float y) {
-	vec2 v = {x, y};
+template<typename T>
+inline vec<2,T> mvec(T x, T y) {
+	vec<2,T> v = {x, y};
 	return v;
 }
 
-inline vec3 mvec(float x, float y, float z) {
-	vec3 v = {x, y, z};
+template<typename T>
+inline vec<3,T> mvec(T x, T y, T z) {
+	vec<3,T> v = {x, y, z};
 	return v;
 }
 
-inline vec4 mvec(float x, float y, float z, float w) {
-	vec4 v = {x, y, z, w};
+template<typename T>
+inline vec<4,T> mvec(T x, T y, T z, T w) {
+	vec<4,T> v = {x, y, z, w};
 	return v;
 }
 
@@ -105,9 +117,9 @@ static const vec3 vec3_1 = {1.0f, 1.0f, 1.0f};
 static const vec3 vec3_0 = {0.0f, 0.0f, 0.0f};
 
 // Computes dot-product of vectors a and b.
-template<unsigned int N>
-inline float dot(const vec<N> a, const vec<N> b) {
-	float r = 0.0f;
+template<unsigned int N, typename T>
+inline T dot(const vec<N,T> a, const vec<N,T> b) {
+	T r = 0;
 	for (unsigned int i = 0; i < N; ++i) {
 		r += a[i] * b[i];
 	}
@@ -115,26 +127,31 @@ inline float dot(const vec<N> a, const vec<N> b) {
 }
 
 // Computes cross-product of vectors a and b.
-inline vec3 cross(const vec3 a, const vec3 b) {
-	vec3 r = {a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0]};
+template<typename T>
+inline vec<3,T> cross(const vec<3,T> a, const vec<3,T> b) {
+	vec<3,T> r = {
+		a[1]*b[2] - a[2]*b[1],
+		a[2]*b[0] - a[0]*b[2],
+		a[0]*b[1] - a[1]*b[0]
+	};
 	return r;
 }
 
 // Computes euclidean length of vector v.
-template<unsigned int N>
-inline float length(const vec<N> v) {
+template<unsigned int N, typename T>
+inline T length(const vec<N,T> v) {
 	return std::sqrt(dot(v, v));
 }
 
 // Normalizes vector v.
-template<unsigned int N>
-inline vec<N> normalized(const vec<N> v) {
-	return v * (1.0f / length(v));
+template<unsigned int N, typename T>
+inline vec<N,T> normalized(const vec<N,T> v) {
+	return v * (T(1) / length(v));
 }
 
 // Prints vector v to stream in the format "<x y z>".
-template<unsigned int N>
-std::ostream& operator <<(std::ostream& s, const vec<N> v) {
+template<unsigned int N, typename T>
+std::ostream& operator <<(std::ostream& s, const vec<N,T> v) {
 	s << '<';
 	for (unsigned int i = 0; i < N-1; ++i) {
 		s << v[i] << ' ';

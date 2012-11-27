@@ -7,21 +7,21 @@
 namespace hw {
 namespace math {
 
-template<unsigned int R, unsigned int C = R>
+template<unsigned int R, unsigned int C = R, typename T = float>
 struct mat {
 	// Rows
-	vec<C> data[R];
+	vec<C, T> data[R];
 
 	// Basic element acessors
-	inline float& operator ()(unsigned int i, unsigned int j) {
+	inline T& operator ()(unsigned int i, unsigned int j) {
 		return data[i][j];
 	}
 
-	inline const float& operator ()(unsigned int i, unsigned int j) const {
+	inline const T& operator ()(unsigned int i, unsigned int j) const {
 		return data[i][j];
 	}
 
-	inline bool operator ==(const mat<R,C>& o) const {
+	inline bool operator ==(const mat& o) const {
 		bool eq = true;
 		for (unsigned int i = 0; i < R; ++i) {
 			eq = eq && data[i] == o.data[i];
@@ -29,20 +29,20 @@ struct mat {
 		return eq;
 	}
 
-	inline bool operator !=(const mat<R,C>& o) const {
+	inline bool operator !=(const mat& o) const {
 		return !(*this == o);
 	}
 
 	// Component-wise matrix arithmetic
 #define DEFINE_OP(op) \
-	inline mat<R,C>& operator op##=(const mat<R,C>& o) { \
+	inline mat& operator op##=(const mat& o) { \
 		for (unsigned int i = 0; i < R; ++i) { \
 			data[i] op##= o.data[i]; \
 		} \
 		return *this; \
 	} \
-	inline mat<R,C> operator op(const mat<R,C>& o) const { \
-		mat<R,C> r = *this; \
+	inline mat operator op(const mat& o) const { \
+		mat r = *this; \
 		return r op##= o; \
 	}
 
@@ -52,29 +52,38 @@ struct mat {
 #undef DEFINE_OP
 
 	// Scalar multiplication
-	inline mat<R,C>& operator *=(const float a) {
+	inline mat& operator *=(const T a) {
 		for (unsigned int i = 0; i < R; ++i) {
 			data[i] *= a;
 		}
 		return *this;
 	}
 
-	inline mat<R,C> operator *(const float a) const {
-		mat<R,C> r = *this;
+	inline mat operator *(const T a) const {
+		mat r = *this;
 		return r *= a;
 	}
 
-	inline mat<R,C> operator -() const {
-		mat<R,C> r = *this;
+	inline mat operator -() const {
+		mat r = *this;
 		for (unsigned int i = 0; i < R; ++i) {
 			r.data[i] = -r.data[i];
 		}
 		return r;
 	}
+
+	template<typename T2>
+	inline mat<R,C,T2> typecast() const {
+		mat<R,C,T2> r;
+		for (unsigned int i = 0; i < R; ++i) {
+			r.data[i] = data[i].typecast<T2>();
+		}
+		return r;
+	}
 };
 
-template<unsigned int R, unsigned int C>
-inline mat<R,C> operator *(const float a, const mat<R,C>& m) {
+template<unsigned int R, unsigned int C, typename T>
+inline mat<R,C,T> operator *(const T a, const mat<R,C,T>& m) {
 	return m * a;
 }
 
@@ -100,13 +109,13 @@ static const mat4 mat4_identity = {{
 	{0.0f, 0.0f, 0.0f, 1.0f}
 }};
 
-template<unsigned int M, unsigned int N, unsigned int P>
-mat<M,P> operator *(const mat<M,N>& a, const mat<N,P>& b) {
+template<unsigned int M, unsigned int N, unsigned int P, typename T>
+mat<M,P,T> operator *(const mat<M,N,T>& a, const mat<N,P,T>& b) {
 	mat<M,P> r;
 
 	for (unsigned int i = 0; i < M; ++i) {
 		for (unsigned int j = 0; j < N; ++j) {
-			float s = 0.0f;
+			T s = 0;
 			for (unsigned int k = 0; k < P; ++k) {
 				s += a(i,k) * b(k,j);
 			}
@@ -117,9 +126,9 @@ mat<M,P> operator *(const mat<M,N>& a, const mat<N,P>& b) {
 	return r;
 }
 
-template<unsigned int R, unsigned int C>
-mat<C,R> transpose(const mat<R,C>& m) {
-	mat<C,R> t;
+template<unsigned int R, unsigned int C, typename T>
+mat<C,R,T> transpose(const mat<R,C,T>& m) {
+	mat<C,R,T> t;
 
 	for (unsigned int i = 0; i < R; ++i) {
 		for (unsigned int j = 0; j < C; ++j) {
@@ -131,8 +140,8 @@ mat<C,R> transpose(const mat<R,C>& m) {
 }
 
 // Prints matrix m to stream.
-template<unsigned int R, unsigned int C>
-std::ostream& operator <<(std::ostream& s, const mat<R,C>& m) {
+template<unsigned int R, unsigned int C, typename T>
+std::ostream& operator <<(std::ostream& s, const mat<R,C,T>& m) {
 	for (unsigned int i = 0; i < R; ++i) {
 		s << '|';
 		for (unsigned int j = 0; j < C-1; ++j) {

@@ -102,4 +102,11 @@ BOOST_AUTO_TEST_CASE(MatrixFuncsTest) {
 		"|1 2|\n"
 		"|3 4|";
 	BOOST_CHECK_EQUAL(ss.str(), a_string);
+
+	// Test type conversion
+	const mat<2,2,int> a_int = a.typecast<int>();
+	BOOST_CHECK_EQUAL(a_int(0,0), 1);
+	BOOST_CHECK_EQUAL(a_int(0,1), 2);
+	BOOST_CHECK_EQUAL(a_int(1,0), 3);
+	BOOST_CHECK_EQUAL(a_int(1,1), 4);
 }

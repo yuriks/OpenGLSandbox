@@ -43,6 +43,12 @@ BOOST_AUTO_TEST_CASE(VectorClassTest) {
 
 		BOOST_CHECK_EQUAL(-a, mvec(-2.0f, -3.0f, -4.0f));
 	}
+
+	// Test type conversion
+	const vec<3,int> a_int = a.typecast<int>();
+	BOOST_CHECK_EQUAL(a_int[0], 2);
+	BOOST_CHECK_EQUAL(a_int[1], 3);
+	BOOST_CHECK_EQUAL(a_int[2], 4);
 }
 
 BOOST_AUTO_TEST_CASE(VectorFuncsTest) {
