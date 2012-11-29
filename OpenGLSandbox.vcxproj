@@ -128,6 +128,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='UnitTests|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="test\mat_test.cpp" />
+    <ClCompile Include="test\ObjectPool_test.cpp" />
     <ClCompile Include="test\vec_test.cpp" />
     <ClCompile Include="test\test_main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -138,6 +139,7 @@
     <ClInclude Include="src\GL3\gl3.h" />
     <ClInclude Include="src\GL3\gl3w.h" />
     <ClInclude Include="src\mat.hpp" />
+    <ClInclude Include="src\ObjectPool.hpp" />
     <ClInclude Include="src\vec.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
