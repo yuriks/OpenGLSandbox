@@ -206,5 +206,5 @@ std::ostream& operator <<(std::ostream& s, const mat<R,C,T>& m) {
 	return s;
 }
 
-}
-}	
+} // namespace math
+} // namespace hw

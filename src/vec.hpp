@@ -159,5 +159,5 @@ std::ostream& operator <<(std::ostream& s, const vec<N,T> v) {
 	return s << v[N-1] << '>';
 }
 
-}
-}
+} // namespace math
+} // namespace hw
