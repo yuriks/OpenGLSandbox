@@ -127,6 +127,38 @@ mat<M,P,T> operator *(const mat<M,N,T>& a, const mat<N,P,T>& b) {
 	return vr;
 }
 
+// Matrix-column vector multiplication
+template<unsigned int R, unsigned int C, typename T>
+vec<R,T> operator *(const mat<R,C,T>& m, const vec<C,T> v) {
+	vec<R,T> vr;
+
+	for (unsigned int r = 0; r < R; ++r) {
+		T s = 0;
+		for (unsigned int c = 0; c < C; ++c) {
+			s += m(r,c) * v[c];
+		}
+		vr[r] = s;
+	}
+
+	return vr;
+}
+
+//Row vector-matrix multiplication
+template<unsigned int R, unsigned int C, typename T>
+vec<C,T> operator *(const vec<R,T> v, const mat<R,C,T>& m) {
+	vec<C,T> vr;
+
+	for (unsigned int c = 0; c < C; ++c) {
+		T s = 0;
+		for (unsigned int r = 0; r < R; ++r) {
+			s += m(r,c) * v[r];
+		}
+		vr[c] = s;
+	}
+
+	return vr;
+}
+
 // Column vector version
 template<unsigned int N, typename T>
 inline vec<N,T> vec_from_mat(const mat<N,1,T>& m) {
