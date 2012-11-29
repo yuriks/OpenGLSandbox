@@ -98,6 +98,7 @@ BOOST_AUTO_TEST_CASE(MatrixFuncsTest) {
 	BOOST_CHECK_EQUAL(a * a, a_times_a);
 	BOOST_CHECK_EQUAL(column_matrix * (2.0f * row_matrix), outer_product);
 
+	// Test matrix->vector conversion
 	const vec3 vector = {{1.0f, 2.0f, 3.0f}};
 
 	BOOST_CHECK_EQUAL(vector, vec_from_mat(column_matrix));
