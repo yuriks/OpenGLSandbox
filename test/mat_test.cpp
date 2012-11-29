@@ -77,10 +77,6 @@ BOOST_AUTO_TEST_CASE(MatrixFuncsTest) {
 		{15.0f, 22.0f}
 	}};
 
-	// Test matrix multiplication
-	BOOST_CHECK_EQUAL(a * mat2_identity, a);
-	BOOST_CHECK_EQUAL(a * a, a_times_a);
-
 	const mat<3, 1> column_matrix = {{
 		{1.0f},
 		{2.0f},
@@ -90,6 +86,17 @@ BOOST_AUTO_TEST_CASE(MatrixFuncsTest) {
 	const mat<1, 3> row_matrix = {{
 		{1.0f, 2.0f, 3.0f}
 	}};
+
+	const mat3 outer_product = {{
+		{2,  4,  6},
+		{4,  8, 12},
+		{6, 12, 18}
+	}};
+
+	// Test matrix multiplication
+	BOOST_CHECK_EQUAL(a * mat2_identity, a);
+	BOOST_CHECK_EQUAL(a * a, a_times_a);
+	BOOST_CHECK_EQUAL(column_matrix * (2.0f * row_matrix), outer_product);
 
 	const vec3 vector = {{1.0f, 2.0f, 3.0f}};
 

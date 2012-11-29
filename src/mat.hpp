@@ -109,21 +109,22 @@ static const mat4 mat4_identity = {{
 	{0, 0, 0, 1}
 }};
 
+// Matrix-matrix multiplication
 template<unsigned int M, unsigned int N, unsigned int P, typename T>
 mat<M,P,T> operator *(const mat<M,N,T>& a, const mat<N,P,T>& b) {
-	mat<M,P> r;
+	mat<M,P> vr;
 
-	for (unsigned int i = 0; i < M; ++i) {
-		for (unsigned int j = 0; j < N; ++j) {
+	for (unsigned int m = 0; m < M; ++m) {
+		for (unsigned int p = 0; p < P; ++p) {
 			T s = 0;
-			for (unsigned int k = 0; k < P; ++k) {
-				s += a(i,k) * b(k,j);
+			for (unsigned int n = 0; n < N; ++n) {
+				s += a(m,n) * b(n,p);
 			}
-			r(i,j) = s;
+			vr(m,p) = s;
 		}
 	}
 
-	return r;
+	return vr;
 }
 
 // Column vector version
