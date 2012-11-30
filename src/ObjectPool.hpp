@@ -53,6 +53,8 @@ private:
 	friend class ObjectPool<T>;
 };
 
+// ObjectPool: Efficiently stores a collection of POD structs, providing
+// iteration and persistent handles.
 template<typename T>
 class ObjectPool {
 public:
