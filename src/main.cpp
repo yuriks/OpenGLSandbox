@@ -5,7 +5,7 @@
 #include "vec.hpp"
 #include "mat.hpp"
 #include "Texture.hpp"
-#include "ResourceManager.hpp"
+#include "TextureManager.hpp"
 #include <iostream>
 
 using namespace hw::math;
@@ -53,7 +53,7 @@ int main() {
 
 	using namespace hw::rsrc;
 
-	ResourceManager resource_manager;
+	TextureManager resource_manager;
 	TextureHandle h = resource_manager.loadTexture("placeholder");
 	TextureHandle ruby_h = resource_manager.loadTexture("gems/ruby");
 	const hw::gl::Texture& gl_tex = h->getGLTexture();

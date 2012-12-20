@@ -52,7 +52,7 @@ private:
 	//FilterMode filter_mode;
 	//RepeatMode repeat_mode;
 
-	friend class ResourceManager;
+	friend class TextureManager;
 };
 
 } // namespace rsrc

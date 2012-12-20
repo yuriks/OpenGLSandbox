@@ -6,10 +6,10 @@
 namespace hw {
 namespace rsrc {
 
-class ResourceManager : private boost::noncopyable {
+class TextureManager : private boost::noncopyable {
 public:
-	ResourceManager();
-	~ResourceManager();
+	TextureManager();
+	~TextureManager();
 
 	TextureHandle loadTexture(const std::string& name);
 
@@ -95,16 +95,16 @@ public:
 	}
 
 private:
-	TextureHandle(ResourceManager* manager, size_t index)
+	TextureHandle(TextureManager* manager, size_t index)
 		: index(index), manager(manager)
 	{
 		manager->increaseTextureRefcount(index);
 	}
 
 	size_t index;
-	ResourceManager* manager;
+	TextureManager* manager;
 
-	friend class ResourceManager;
+	friend class TextureManager;
 };
 
 } // namespace rsrc

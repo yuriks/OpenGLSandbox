@@ -125,7 +125,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='UnitTests|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\stb_image.c" />
-    <ClCompile Include="src\ResourceManager.cpp" />
+    <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="test\mat_test.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -149,7 +149,7 @@
     <ClInclude Include="src\gl\Texture.hpp" />
     <ClInclude Include="src\mat.hpp" />
     <ClInclude Include="src\ObjectPool.hpp" />
-    <ClInclude Include="src\ResourceManager.hpp" />
+    <ClInclude Include="src\TextureManager.hpp" />
     <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\Texture.hpp" />
     <ClInclude Include="src\vec.hpp" />

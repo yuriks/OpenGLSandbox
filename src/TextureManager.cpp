@@ -1,4 +1,4 @@
-#include "ResourceManager.hpp"
+#include "TextureManager.hpp"
 
 #include "GL3/gl3w.h"
 #include "stb_image.h"
@@ -37,7 +37,7 @@ static void setTextureParameters(Texture::FilterMode filter_mode, Texture::Repea
 
 }
 
-ResourceManager::ResourceManager()
+TextureManager::TextureManager()
 	: first_free_texture(0)
 {
 	for (size_t i = 0; i < textures.size()-1; ++i) {
@@ -46,12 +46,12 @@ ResourceManager::ResourceManager()
 	textures.back().next_free = -1;
 }
 
-ResourceManager::~ResourceManager() {
+TextureManager::~TextureManager() {
 	collectGarbage();
 	assert(texture_names.empty());
 }
 
-TextureHandle ResourceManager::loadTexture(const std::string& name) {
+TextureHandle TextureManager::loadTexture(const std::string& name) {
 	// Check if texture has already been loaded.
 	auto existing = texture_names.find(name);
 	if (existing != texture_names.end()) {
@@ -105,7 +105,7 @@ TextureHandle ResourceManager::loadTexture(const std::string& name) {
 	}
 }
 
-void ResourceManager::collectGarbage() {
+void TextureManager::collectGarbage() {
 	for (auto i = texture_names.begin(), end = texture_names.end(); i != end;) {
 		size_t index = i->second;
 		TextureNode& node = textures[index];
