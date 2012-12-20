@@ -37,24 +37,10 @@ static void setTextureParameters(Texture::FilterMode filter_mode, Texture::Repea
 
 }
 
-TextureManager::TextureManager()
-	: first_free_texture(0)
-{
-	for (size_t i = 0; i < textures.size()-1; ++i) {
-		textures[i].next_free = i+1;
-	}
-	textures.back().next_free = -1;
-}
-
-TextureManager::~TextureManager() {
-	collectGarbage();
-	assert(texture_names.empty());
-}
-
 TextureHandle TextureManager::loadTexture(const std::string& name) {
 	// Check if texture has already been loaded.
-	auto existing = texture_names.find(name);
-	if (existing != texture_names.end()) {
+	auto existing = resource_names.find(name);
+	if (existing != resource_names.end()) {
 		return TextureHandle(this, existing->second);
 	} else {
 		std::string texture_filename;
@@ -92,35 +78,15 @@ TextureHandle TextureManager::loadTexture(const std::string& name) {
 
 			glTexImage2D(GL_TEXTURE_2D, 0, gl_format, width, height, 0, gl_format, GL_UNSIGNED_BYTE, data);
 
-			size_t tex_index = first_free_texture;
+			size_t tex_index = first_free_resource;
 			assert(tex_index != -1);
-			first_free_texture = textures[tex_index].next_free;
+			first_free_resource = resources[tex_index].next_free;
 
-			textures[tex_index].refcount = 0;
-			Texture* tex = new(textures[tex_index].texture_data) Texture(std::move(new_tex), name, width, height);
+			refcounts[tex_index] = 0;
+			Texture* tex = new(resources[tex_index].data) Texture(std::move(new_tex), name, width, height);
 
-			texture_names.emplace(name, tex_index);
+			resource_names.emplace(name, tex_index);
 			return TextureHandle(this, tex_index);
-		}
-	}
-}
-
-void TextureManager::collectGarbage() {
-	for (auto i = texture_names.begin(), end = texture_names.end(); i != end;) {
-		size_t index = i->second;
-		TextureNode& node = textures[index];
-		assert(node.refcount >= 0);
-
-		if (node.refcount == 0) {
-			Texture* tex = reinterpret_cast<Texture*>(node.texture_data);
-			tex->~Texture();
-
-			node.next_free = first_free_texture;
-			first_free_texture = index;
-
-			texture_names.erase(i++);
-		} else {
-			++i;
 		}
 	}
 }

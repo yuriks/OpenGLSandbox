@@ -15,10 +15,10 @@
 namespace hw {
 namespace rsrc {
 
-class TextureHandle;
-
 class Texture : private boost::noncopyable {
 public:
+	static const int MAX_RESOURCES = 64;
+
 	enum class FilterMode {
 		NEAREST,
 		LINEAR,

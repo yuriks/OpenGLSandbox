@@ -149,6 +149,7 @@
     <ClInclude Include="src\gl\Texture.hpp" />
     <ClInclude Include="src\mat.hpp" />
     <ClInclude Include="src\ObjectPool.hpp" />
+    <ClInclude Include="src\ResourceManager.hpp" />
     <ClInclude Include="src\TextureManager.hpp" />
     <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\Texture.hpp" />
