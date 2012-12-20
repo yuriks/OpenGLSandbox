@@ -66,6 +66,8 @@ TextureHandle ResourceManager::loadTexture(const std::string& name) {
 		if (name == "placeholder") {
 			texture_filename = "data/placeholder.png";
 			channels = 3;
+		} else if (name == "gems/ruby") {
+			texture_filename = "data/ruby.png";
 		}
 
 		if (texture_filename.empty()) {

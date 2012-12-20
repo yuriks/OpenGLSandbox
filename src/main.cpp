@@ -55,6 +55,7 @@ int main() {
 
 	ResourceManager resource_manager;
 	TextureHandle h = resource_manager.loadTexture("placeholder");
+	TextureHandle ruby_h = resource_manager.loadTexture("gems/ruby");
 	const hw::gl::Texture& gl_tex = h->getGLTexture();
 
 	bool running = true;
@@ -66,14 +67,27 @@ int main() {
 		glBindTexture(GL_TEXTURE_2D, gl_tex.name);
 
 		glBegin(GL_QUADS);
-			glTexCoord2f(0, 0);
-			glVertex2f(-0.75f, -0.75f);
 			glTexCoord2f(0, 1);
-			glVertex2f(-0.75f, 0.75f);
-			glTexCoord2f(1, 1);
-			glVertex2f(0.75f, 0.75f);
+			glVertex2f(-0.9f, -0.9f);
+			glTexCoord2f(0, 0);
+			glVertex2f(-0.9f, 0.2f);
 			glTexCoord2f(1, 0);
-			glVertex2f(0.75f, -0.75f);
+			glVertex2f(0.2f, 0.2f);
+			glTexCoord2f(1, 1);
+			glVertex2f(0.2f, -0.9f);
+		glEnd();
+
+		glBindTexture(GL_TEXTURE_2D, ruby_h->getGLTexture().name);
+
+		glBegin(GL_QUADS);
+			glTexCoord2f(0, 1);
+			glVertex2f(-0.2f, -0.2f);
+			glTexCoord2f(0, 0);
+			glVertex2f(-0.2f, 0.9f);
+			glTexCoord2f(1, 0);
+			glVertex2f(0.9f, 0.9f);
+			glTexCoord2f(1, 1);
+			glVertex2f(0.9f, -0.2f);
 		glEnd();
 
 		glfwSwapBuffers();
