@@ -4,6 +4,11 @@
 #include "stb_image.h"
 #include "gl/Texture.hpp"
 
+#include "engine_objects.hpp"
+#include "ScriptCore.hpp"
+#include "squirrel/squirrel.h"
+#include "script_utils.hpp"
+
 namespace hw {
 namespace rsrc {
 
@@ -37,6 +42,43 @@ static void setTextureParameters(Texture::FilterMode filter_mode, Texture::Repea
 
 }
 
+TextureManager::TextureManager() {
+	HSQUIRRELVM vm = engine::script_engine->vm;
+
+	sq_pushroottable(vm); // 1
+	sq_pushstring(vm, "Resources", -1); // 2
+	CSQ(sq_get(vm, -2)); // 2
+
+	sq_pushstring(vm, "TextureInfo", -1); // 3
+	sq_newtable(vm); // 4
+	CSQ(sq_newslot(vm, -3, SQFalse)); // 2
+	sq_poptop(vm); // 1
+
+#define ADD_CONSTANT(name) \
+		sq_pushstring(vm, PREFIX #name, -1); \
+		sq_pushinteger(vm, static_cast<SQInteger>(ENUM_PREFIX name)); \
+		CSQ(sq_newslot(vm, -3, SQFalse))
+
+#define PREFIX "TEXFILTER_"
+#define ENUM_PREFIX Texture::FilterMode::
+	ADD_CONSTANT(NEAREST);
+	ADD_CONSTANT(LINEAR);
+	ADD_CONSTANT(MIPMAP_LINEAR);
+#undef PREFIX
+#undef ENUM_PREFIX
+
+#define PREFIX "TEXREPEAT_"
+#define ENUM_PREFIX Texture::RepeatMode::
+	ADD_CONSTANT(CLAMP);
+	ADD_CONSTANT(WRAP);
+#undef PREFIX
+#undef ENUM_PREFIX
+
+#undef ADD_CONSTANT
+
+	sq_poptop(vm); // 0
+}
+
 TextureHandle TextureManager::loadTexture(const std::string& name) {
 	// Check if texture has already been loaded.
 	auto existing = resource_names.find(name);
@@ -48,13 +90,39 @@ TextureHandle TextureManager::loadTexture(const std::string& name) {
 		Texture::RepeatMode repeat_mode = Texture::RepeatMode::WRAP;
 		int channels = 4;
 
-		// TODO placeholder entries
-		if (name == "placeholder") {
-			texture_filename = "data/placeholder.png";
-			channels = 3;
-		} else if (name == "gems/ruby") {
-			texture_filename = "data/ruby.png";
+		HSQUIRRELVM vm = ::hw::engine::script_engine->vm;
+		sq_pushroottable(vm);
+		loadVariablePath(vm, "Resources^TextureInfo^" + name);
+
+		const SQChar* tex_filename_cstr;
+
+		CSQ(getKey(vm, "filename"));
+		sq_getstring(vm, -1, &tex_filename_cstr);
+		sq_poptop(vm);
+		texture_filename = tex_filename_cstr;
+
+		if (SQ_SUCCEEDED(getKey(vm, "channels"))) {
+			sq_getinteger(vm, -1, &channels);
+			sq_poptop(vm);
 		}
+
+		if (SQ_SUCCEEDED(getKey(vm, "filter_mode"))) {
+			SQInteger tmp;
+			sq_getinteger(vm, -1, &tmp);
+			sq_poptop(vm);
+
+			filter_mode = Texture::FilterMode(tmp);
+		}
+
+		if (SQ_SUCCEEDED(getKey(vm, "repeat_mode"))) {
+			SQInteger tmp;
+			sq_getinteger(vm, -1, &tmp);
+			sq_poptop(vm);
+
+			repeat_mode = Texture::RepeatMode(tmp);
+		}
+
+		texture_filename = "data/" + texture_filename;
 
 		if (texture_filename.empty()) {
 			return TextureHandle();

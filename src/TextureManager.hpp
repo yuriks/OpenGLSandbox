@@ -11,6 +11,8 @@ typedef ResourceHandle<Texture> TextureHandle;
 
 class TextureManager : public ResourceManager<Texture> {
 public:
+	TextureManager();
+
 	TextureHandle loadTexture(const std::string& name);
 };
 

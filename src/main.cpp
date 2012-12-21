@@ -6,6 +6,8 @@
 #include "mat.hpp"
 #include "Texture.hpp"
 #include "TextureManager.hpp"
+#include "ScriptCore.hpp"
+#include "engine_objects.hpp"
 #include <iostream>
 
 using namespace hw::math;
@@ -51,11 +53,14 @@ int main() {
 		{0.0f, 0.0f, 0.0f, 1.0f}
 	}};
 
+	hw::engine::initialize_engine_objects();
+
+	{
+
 	using namespace hw::rsrc;
 
-	TextureManager resource_manager;
-	TextureHandle h = resource_manager.loadTexture("placeholder");
-	TextureHandle ruby_h = resource_manager.loadTexture("gems/ruby");
+	TextureHandle h = hw::engine::texture_manager->loadTexture("placeholder");
+	TextureHandle ruby_h = hw::engine::texture_manager->loadTexture("gems/ruby");
 	const hw::gl::Texture& gl_tex = h->getGLTexture();
 
 	bool running = true;
@@ -93,6 +98,10 @@ int main() {
 		glfwSwapBuffers();
 		running = running && glfwGetWindowParam(GLFW_OPENED);
 	}
+
+	}
+
+	hw::engine::teardown_engine_objects();
 
 	glfwCloseWindow();
 	glfwTerminate();
