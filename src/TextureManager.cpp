@@ -81,82 +81,73 @@ TextureManager::TextureManager() {
 
 TextureHandle TextureManager::loadTexture(const std::string& name) {
 	// Check if texture has already been loaded.
-	auto existing = resource_names.find(name);
-	if (existing != resource_names.end()) {
-		return TextureHandle(this, existing->second);
-	} else {
-		std::string texture_filename;
-		Texture::FilterMode filter_mode = Texture::FilterMode::LINEAR;
-		Texture::RepeatMode repeat_mode = Texture::RepeatMode::WRAP;
-		int channels = 4;
+	TextureHandle existing = getLoadedResource(name);
+	if (existing.valid())
+		return existing;
 
-		HSQUIRRELVM vm = ::hw::engine::script_engine->vm;
-		sq_pushroottable(vm);
-		loadVariablePath(vm, "Resources^TextureInfo^" + name);
+	std::string texture_filename;
+	Texture::FilterMode filter_mode = Texture::FilterMode::LINEAR;
+	Texture::RepeatMode repeat_mode = Texture::RepeatMode::WRAP;
+	int channels = 4;
 
-		const SQChar* tex_filename_cstr;
+	HSQUIRRELVM vm = ::hw::engine::script_engine->vm;
+	sq_pushroottable(vm);
+	loadVariablePath(vm, "Resources^TextureInfo^" + name);
 
-		CSQ(getKey(vm, "filename"));
-		sq_getstring(vm, -1, &tex_filename_cstr);
+	const SQChar* tex_filename_cstr;
+
+	CSQ(getKey(vm, "filename"));
+	sq_getstring(vm, -1, &tex_filename_cstr);
+	sq_poptop(vm);
+	texture_filename = tex_filename_cstr;
+
+	if (SQ_SUCCEEDED(getKey(vm, "channels"))) {
+		sq_getinteger(vm, -1, &channels);
 		sq_poptop(vm);
-		texture_filename = tex_filename_cstr;
-
-		if (SQ_SUCCEEDED(getKey(vm, "channels"))) {
-			sq_getinteger(vm, -1, &channels);
-			sq_poptop(vm);
-		}
-
-		if (SQ_SUCCEEDED(getKey(vm, "filter_mode"))) {
-			SQInteger tmp;
-			sq_getinteger(vm, -1, &tmp);
-			sq_poptop(vm);
-
-			filter_mode = Texture::FilterMode(tmp);
-		}
-
-		if (SQ_SUCCEEDED(getKey(vm, "repeat_mode"))) {
-			SQInteger tmp;
-			sq_getinteger(vm, -1, &tmp);
-			sq_poptop(vm);
-
-			repeat_mode = Texture::RepeatMode(tmp);
-		}
-
-		texture_filename = "data/" + texture_filename;
-
-		if (texture_filename.empty()) {
-			return TextureHandle();
-		} else {
-			gl::Texture new_tex;
-			glGenTextures(1, &new_tex.name);
-
-			glBindTexture(GL_TEXTURE_2D, new_tex.name);
-
-			setTextureParameters(filter_mode, repeat_mode);
-
-			assert(channels >= 1 && channels <= 4);
-			static const GLint internal_formats[4] = {GL_RED, GL_RG, GL_RGB, GL_RGBA};
-			GLint gl_format = internal_formats[channels-1];
-
-			int width, height, comp;
-			unsigned char* data = stbi_load(texture_filename.c_str(), &width, &height, &comp, channels);
-			if (data == nullptr) {
-				return TextureHandle();
-			}
-
-			glTexImage2D(GL_TEXTURE_2D, 0, gl_format, width, height, 0, gl_format, GL_UNSIGNED_BYTE, data);
-
-			size_t tex_index = first_free_resource;
-			assert(tex_index != -1);
-			first_free_resource = resources[tex_index].next_free;
-
-			refcounts[tex_index] = 0;
-			Texture* tex = new(resources[tex_index].data) Texture(std::move(new_tex), name, width, height);
-
-			resource_names.emplace(name, tex_index);
-			return TextureHandle(this, tex_index);
-		}
 	}
+
+	if (SQ_SUCCEEDED(getKey(vm, "filter_mode"))) {
+		SQInteger tmp;
+		sq_getinteger(vm, -1, &tmp);
+		sq_poptop(vm);
+
+		filter_mode = Texture::FilterMode(tmp);
+	}
+
+	if (SQ_SUCCEEDED(getKey(vm, "repeat_mode"))) {
+		SQInteger tmp;
+		sq_getinteger(vm, -1, &tmp);
+		sq_poptop(vm);
+
+		repeat_mode = Texture::RepeatMode(tmp);
+	}
+
+	texture_filename = "data/" + texture_filename;
+
+	if (texture_filename.empty()) {
+		return TextureHandle();
+	}
+
+	gl::Texture new_tex;
+	glGenTextures(1, &new_tex.name);
+
+	glBindTexture(GL_TEXTURE_2D, new_tex.name);
+
+	setTextureParameters(filter_mode, repeat_mode);
+
+	assert(channels >= 1 && channels <= 4);
+	static const GLint internal_formats[4] = {GL_RED, GL_RG, GL_RGB, GL_RGBA};
+	GLint gl_format = internal_formats[channels-1];
+
+	int width, height, comp;
+	unsigned char* data = stbi_load(texture_filename.c_str(), &width, &height, &comp, channels);
+	if (data == nullptr) {
+		return TextureHandle();
+	}
+
+	glTexImage2D(GL_TEXTURE_2D, 0, gl_format, width, height, 0, gl_format, GL_UNSIGNED_BYTE, data);
+
+	return constructResource(name, Texture(std::move(new_tex), name, width, height));
 }
 
 } // namespace rsrc

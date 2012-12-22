@@ -38,6 +38,11 @@ public:
 	int getImageWidth() const { return image_width; }
 	int getImageHeight() const { return image_height; }
 
+	Texture(Texture&& o)
+		: opengl_tex(std::move(o.opengl_tex)), image_name(std::move(o.image_name)),
+		image_width(o.image_width), image_height(o.image_height)
+	{ }
+
 private:
 	Texture(gl::Texture&& opengl_tex, std::string name, int width, int height)
 		: opengl_tex(std::move(opengl_tex)), image_name(std::move(name)),
