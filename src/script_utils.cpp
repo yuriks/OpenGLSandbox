@@ -1,6 +1,6 @@
 #include "script_utils.hpp"
 
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/split.hpp>
 
 namespace hw {
 
@@ -17,8 +17,6 @@ void loadVariablePath(HSQUIRRELVM vm, const std::vector<std::string>& path) {
 }
 
 void loadVariablePath(HSQUIRRELVM vm, const std::string& path) {
-	using namespace std::placeholders;
-
 	std::vector<std::string> split_path;
 	boost::split(split_path, path, [](char c) { return c == '^'; });
 	loadVariablePath(vm, split_path);
