@@ -7,11 +7,13 @@ namespace hw {
 class ScriptEngine;
 namespace rsrc {
 	class TextureManager;
+	class ShaderManager;
 }
 
 namespace engine {
 
 extern std::unique_ptr<rsrc::TextureManager> texture_manager;
+extern std::unique_ptr<rsrc::ShaderManager> shader_manager;
 extern std::unique_ptr<ScriptEngine> script_engine;
 
 void initialize_engine_objects();
